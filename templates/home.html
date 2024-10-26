@@ -2,7 +2,20 @@
 {% block content %} 
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/card.css' %}" />
+<link rel="stylesheet" href="{% static 'css/search.css' %}" />
 <h1>All Events</h1>
+<form method="get" action="{% url 'home' %}">
+  <input type="text" name="search" placeholder="Search by name, date, or location" value="{{ search_query }}">
+  <select name="category">
+      <option value="">All Categories</option>
+      <option value="conference" {% if selected_category == "conference" %}selected{% endif %}>Conference</option>
+      <option value="concert" {% if selected_category == "concert" %}selected{% endif %}>Concert</option>
+      <option value="workshop" {% if selected_category == "workshop" %}selected{% endif %}>Workshop</option>
+  </select>
+  <button type="submit">Search</button>
+</form>
+
+
 
 <div class="event-container">
   {% if events %}
@@ -12,16 +25,21 @@
         <p>{{ event.description }}</p>
         <p>Location: {{ event.location }}</p>
         <p>Date: {{ event.date }}</p>
+        <p>Capacity: {{ event.capacity }}</p>
+        <p>Category: {{ event.category }}</p>
 
         {% if user.is_authenticated %}
-          {% if event.id in booked_events %}
-            <span class="booked-status btn-book" >Booked</span>
-          {% else %}
-            <a href="{% url 'book_event' event.id %}" class="btn-book">Book Now</a>
-          {% endif %}
+        {% if event.id in booked_events %}
+            <span class="booked-status btn-book">Booked</span>
+        {% elif event.booking_set.count >= event.capacity %}
+            <span class="booked-status btn-book">Fully Booked</span>
         {% else %}
-          <a href="{% url 'login' %}" class="btn-book">Login to Book</a>
+            <a href="{% url 'book_event' event.id %}" class="btn-book">Book Now</a>
         {% endif %}
+    {% else %}
+        <a href="{% url 'login' %}" class="btn-book">Login to Book</a>
+    {% endif %}
+    
       </div>
     {% endfor %}
   {% else %}

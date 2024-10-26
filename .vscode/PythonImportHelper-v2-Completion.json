@@ -17,30 +17,6 @@
         "documentation": {}
     },
     {
-        "label": "settings",
-        "importPath": "django.conf",
-        "description": "django.conf",
-        "isExtraImport": true,
-        "detail": "django.conf",
-        "documentation": {}
-    },
-    {
-        "label": "migrations",
-        "importPath": "django.db",
-        "description": "django.db",
-        "isExtraImport": true,
-        "detail": "django.db",
-        "documentation": {}
-    },
-    {
-        "label": "models",
-        "importPath": "django.db",
-        "description": "django.db",
-        "isExtraImport": true,
-        "detail": "django.db",
-        "documentation": {}
-    },
-    {
         "label": "migrations",
         "importPath": "django.db",
         "description": "django.db",
@@ -330,6 +306,14 @@
         "documentation": {}
     },
     {
+        "label": "Q",
+        "importPath": "django.db.models",
+        "description": "django.db.models",
+        "isExtraImport": true,
+        "detail": "django.db.models",
+        "documentation": {}
+    },
+    {
         "label": "get_wsgi_application",
         "importPath": "django.core.wsgi",
         "description": "django.core.wsgi",
@@ -353,15 +337,6 @@
         "description": "event.migrations.0001_initial",
         "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Event',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
         "detail": "event.migrations.0001_initial",
-        "documentation": {}
-    },
-    {
-        "label": "Migration",
-        "kind": 6,
-        "importPath": "event.migrations.0002_booking",
-        "description": "event.migrations.0002_booking",
-        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('event', '0001_initial'),\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Booking',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
-        "detail": "event.migrations.0002_booking",
         "documentation": {}
     },
     {
@@ -405,7 +380,7 @@
         "kind": 6,
         "importPath": "event.forms",
         "description": "event.forms",
-        "peekOfCode": "class ChangeData(UserChangeForm):\n    password = None\n    class Meta:\n        model = User\n        fields = ['username', 'first_name', 'last_name', 'email']\nclass EventForm(forms.ModelForm):\n    class Meta:\n        model = Event\n        fields = ['name', 'date', 'location', 'description']",
+        "peekOfCode": "class ChangeData(UserChangeForm):\n    password = None\n    class Meta:\n        model = User\n        fields = ['username', 'first_name', 'last_name', 'email']\nclass EventForm(forms.ModelForm):\n    date = forms.DateTimeField(\n        widget=forms.DateTimeInput(\n            attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'\n        ),",
         "detail": "event.forms",
         "documentation": {}
     },
@@ -414,7 +389,7 @@
         "kind": 6,
         "importPath": "event.forms",
         "description": "event.forms",
-        "peekOfCode": "class EventForm(forms.ModelForm):\n    class Meta:\n        model = Event\n        fields = ['name', 'date', 'location', 'description']",
+        "peekOfCode": "class EventForm(forms.ModelForm):\n    date = forms.DateTimeField(\n        widget=forms.DateTimeInput(\n            attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'\n        ),\n        input_formats=['%Y-%m-%dT%H:%M'],\n    )\n    class Meta:\n        model = Event\n        fields = ['name', 'date', 'location',",
         "detail": "event.forms",
         "documentation": {}
     },
@@ -423,7 +398,7 @@
         "kind": 6,
         "importPath": "event.models",
         "description": "event.models",
-        "peekOfCode": "class Event(models.Model):\n    name = models.CharField(max_length=200)\n    date = models.DateTimeField()\n    location = models.CharField(max_length=200)\n    description = models.TextField()\n    created_by = models.ForeignKey(\n        User, on_delete=models.CASCADE, related_name=\"events\")\n    def __str__(self):\n        return self.name\nclass Booking(models.Model):",
+        "peekOfCode": "class Event(models.Model):\n    CATEGORY_CHOICES = [\n        ('conference', 'Conference'),\n        ('concert', 'Concert'),\n        ('workshop', 'Workshop'),\n    ]\n    name = models.CharField(max_length=200)\n    description = models.TextField()\n    location = models.CharField(max_length=200)\n    date = models.DateTimeField()",
         "detail": "event.models",
         "documentation": {}
     },
@@ -486,7 +461,7 @@
         "kind": 2,
         "importPath": "event.views",
         "description": "event.views",
-        "peekOfCode": "def event_admin_delete(request, event_id):\n    event = get_object_or_404(Event, id=event_id)\n    if request.method == 'POST':\n        event.delete()\n        messages.success(request, 'Event deleted by admin.')\n        return redirect('my_event')\n    return render(request, 'events/event_confirm_delete.html', {'event': event})\n@login_required\ndef book_event(request, event_id):\n    event = get_object_or_404(Event, id=event_id)",
+        "peekOfCode": "def event_admin_delete(request, event_id):\n    event = get_object_or_404(Event, id=event_id)\n    if request.method == 'POST':\n        event.delete()\n        messages.success(request, 'Event deleted by admin.')\n        return redirect('my_event')\n    return render(request, 'events/event_confirm_delete.html', {'event': event})\n# @login_required\n# def book_event(request, event_id):\n#     event = get_object_or_404(Event, id=event_id)",
         "detail": "event.views",
         "documentation": {}
     },
@@ -495,7 +470,7 @@
         "kind": 2,
         "importPath": "event.views",
         "description": "event.views",
-        "peekOfCode": "def book_event(request, event_id):\n    event = get_object_or_404(Event, id=event_id)\n    if Booking.objects.filter(user=request.user, event=event).exists():\n        messages.warning(request, \"You have already booked this event.\")\n        return redirect('home')\n    booking = Booking(user=request.user, event=event)\n    booking.save()\n    messages.success(request, \"You have successfully booked the event!\")\n    return redirect('home')\n@login_required",
+        "peekOfCode": "def book_event(request, event_id):\n    event = get_object_or_404(Event, id=event_id)\n    if Booking.objects.filter(event=event).count() >= event.capacity:\n        messages.warning(request, \"This event is fully booked.\")\n        return redirect('home')\n    if Booking.objects.filter(user=request.user, event=event).exists():\n        messages.warning(request, \"You have already booked this event.\")\n        return redirect('home')\n    booking = Booking(user=request.user, event=event)\n    booking.save()",
         "detail": "event.views",
         "documentation": {}
     },
@@ -747,7 +722,7 @@
         "kind": 2,
         "importPath": "event_management.views",
         "description": "event_management.views",
-        "peekOfCode": "def home(request):\n    events = Event.objects.all()\n    booked_events = []\n    # Check if the user is authenticated\n    if request.user.is_authenticated:\n        booked_events = Booking.objects.filter(\n            user=request.user).values_list('event_id', flat=True)\n    return render(request, 'home.html', {'events': events, 'booked_events': booked_events})",
+        "peekOfCode": "def home(request):\n    events = Event.objects.all()\n    booked_events = []\n    query = request.GET.get('search', '')\n    category = request.GET.get('category', '')\n    if request.user.is_authenticated:\n        booked_events = Booking.objects.filter(\n            user=request.user).values_list('event_id', flat=True)\n    # Filter events based on search and category\n    if query:",
         "detail": "event_management.views",
         "documentation": {}
     },

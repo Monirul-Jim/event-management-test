@@ -63,9 +63,22 @@ def event_admin_delete(request, event_id):
     return render(request, 'events/event_confirm_delete.html', {'event': event})
 
 
+# @login_required
+# def book_event(request, event_id):
+#     event = get_object_or_404(Event, id=event_id)
+#     if Booking.objects.filter(user=request.user, event=event).exists():
+#         messages.warning(request, "You have already booked this event.")
+#         return redirect('home')
+#     booking = Booking(user=request.user, event=event)
+#     booking.save()
+#     messages.success(request, "You have successfully booked the event!")
+#     return redirect('home')
 @login_required
 def book_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
+    if Booking.objects.filter(event=event).count() >= event.capacity:
+        messages.warning(request, "This event is fully booked.")
+        return redirect('home')
     if Booking.objects.filter(user=request.user, event=event).exists():
         messages.warning(request, "You have already booked this event.")
         return redirect('home')

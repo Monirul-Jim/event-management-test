@@ -27,6 +27,14 @@ class ChangeData(UserChangeForm):
 
 
 class EventForm(forms.ModelForm):
+    date = forms.DateTimeField(
+        widget=forms.DateTimeInput(
+            attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'
+        ),
+        input_formats=['%Y-%m-%dT%H:%M'],
+    )
+
     class Meta:
         model = Event
-        fields = ['name', 'date', 'location', 'description']
+        fields = ['name', 'date', 'location',
+                  'description', 'capacity', 'category']
