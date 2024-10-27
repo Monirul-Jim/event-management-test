@@ -25,31 +25,67 @@ def event_create(request):
 
 @login_required
 def my_event(request):
-    events = Event.objects.filter(created_by=request.user)
+    if request.user.is_superuser:
+        events = Event.objects.all()  # Superuser sees all events
+    else:
+        # Normal user sees only their events
+        events = Event.objects.filter(created_by=request.user)
     return render(request, 'events/my_event.html', {'data': events})
 
 
+# def event_update(request, event_id):
+#     event = get_object_or_404(Event, id=event_id, created_by=request.user)
+#     if request.method == 'POST':
+#         form = forms.EventForm(request.POST, instance=event)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Event updated successfully.')
+#             return redirect('my_event')
+#     else:
+#         form = forms.EventForm(instance=event)
+#     return render(request, 'events/event_form.html', {'form': form})
 @login_required
 def event_update(request, event_id):
-    event = get_object_or_404(Event, id=event_id, created_by=request.user)
-    if request.method == 'POST':
-        form = forms.EventForm(request.POST, instance=event)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Event updated successfully.')
-            return redirect('my_event')
+    event = get_object_or_404(Event, id=event_id)
+    # Check if the user is the event creator or a superuser
+    if request.user == event.created_by or request.user.is_superuser:
+        if request.method == 'POST':
+            form = forms.EventForm(request.POST, instance=event)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Event updated successfully.')
+                return redirect('my_event')
+        else:
+            form = forms.EventForm(instance=event)
     else:
-        form = forms.EventForm(instance=event)
+        messages.error(
+            request, 'You do not have permission to update this event.')
+        return redirect('my_event')
+
     return render(request, 'events/event_form.html', {'form': form})
 
 
+# @login_required
+# def event_delete(request, event_id):
+#     event = get_object_or_404(Event, id=event_id, created_by=request.user)
+#     if request.method == 'POST':
+#         event.delete()
+#         messages.success(request, 'Event deleted successfully.')
+#         return redirect('my_event')
+#     return render(request, 'events/event_confirm_delete.html', {'event': event})
 @login_required
 def event_delete(request, event_id):
-    event = get_object_or_404(Event, id=event_id, created_by=request.user)
-    if request.method == 'POST':
-        event.delete()
-        messages.success(request, 'Event deleted successfully.')
+    event = get_object_or_404(Event, id=event_id)
+    if request.user == event.created_by or request.user.is_superuser:
+        if request.method == 'POST':
+            event.delete()
+            messages.success(request, 'Event deleted successfully.')
+            return redirect('my_event')
+    else:
+        messages.error(
+            request, 'You do not have permission to delete this event.')
         return redirect('my_event')
+
     return render(request, 'events/event_confirm_delete.html', {'event': event})
 
 

@@ -434,7 +434,7 @@
         "kind": 2,
         "importPath": "event.views",
         "description": "event.views",
-        "peekOfCode": "def my_event(request):\n    events = Event.objects.filter(created_by=request.user)\n    return render(request, 'events/my_event.html', {'data': events})\n@login_required\ndef event_update(request, event_id):\n    event = get_object_or_404(Event, id=event_id, created_by=request.user)\n    if request.method == 'POST':\n        form = forms.EventForm(request.POST, instance=event)\n        if form.is_valid():\n            form.save()",
+        "peekOfCode": "def my_event(request):\n    if request.user.is_superuser:\n        events = Event.objects.all()  # Superuser sees all events\n    else:\n        # Normal user sees only their events\n        events = Event.objects.filter(created_by=request.user)\n    return render(request, 'events/my_event.html', {'data': events})\n# def event_update(request, event_id):\n#     event = get_object_or_404(Event, id=event_id, created_by=request.user)\n#     if request.method == 'POST':",
         "detail": "event.views",
         "documentation": {}
     },
@@ -443,7 +443,7 @@
         "kind": 2,
         "importPath": "event.views",
         "description": "event.views",
-        "peekOfCode": "def event_update(request, event_id):\n    event = get_object_or_404(Event, id=event_id, created_by=request.user)\n    if request.method == 'POST':\n        form = forms.EventForm(request.POST, instance=event)\n        if form.is_valid():\n            form.save()\n            messages.success(request, 'Event updated successfully.')\n            return redirect('my_event')\n    else:\n        form = forms.EventForm(instance=event)",
+        "peekOfCode": "def event_update(request, event_id):\n    event = get_object_or_404(Event, id=event_id)\n    # Check if the user is the event creator or a superuser\n    if request.user == event.created_by or request.user.is_superuser:\n        if request.method == 'POST':\n            form = forms.EventForm(request.POST, instance=event)\n            if form.is_valid():\n                form.save()\n                messages.success(request, 'Event updated successfully.')\n                return redirect('my_event')",
         "detail": "event.views",
         "documentation": {}
     },
@@ -452,7 +452,7 @@
         "kind": 2,
         "importPath": "event.views",
         "description": "event.views",
-        "peekOfCode": "def event_delete(request, event_id):\n    event = get_object_or_404(Event, id=event_id, created_by=request.user)\n    if request.method == 'POST':\n        event.delete()\n        messages.success(request, 'Event deleted successfully.')\n        return redirect('my_event')\n    return render(request, 'events/event_confirm_delete.html', {'event': event})\n@staff_member_required\ndef event_admin_delete(request, event_id):\n    event = get_object_or_404(Event, id=event_id)",
+        "peekOfCode": "def event_delete(request, event_id):\n    event = get_object_or_404(Event, id=event_id)\n    if request.user == event.created_by or request.user.is_superuser:\n        if request.method == 'POST':\n            event.delete()\n            messages.success(request, 'Event deleted successfully.')\n            return redirect('my_event')\n    else:\n        messages.error(\n            request, 'You do not have permission to delete this event.')",
         "detail": "event.views",
         "documentation": {}
     },
@@ -722,7 +722,7 @@
         "kind": 2,
         "importPath": "event_management.views",
         "description": "event_management.views",
-        "peekOfCode": "def home(request):\n    events = Event.objects.all()\n    booked_events = []\n    query = request.GET.get('search', '')\n    category = request.GET.get('category', '')\n    if request.user.is_authenticated:\n        booked_events = Booking.objects.filter(\n            user=request.user).values_list('event_id', flat=True)\n    # Filter events based on search and category\n    if query:",
+        "peekOfCode": "def home(request):\n    events = Event.objects.all()\n    booked_events = []\n    query = request.GET.get('search', '')\n    category = request.GET.get('category', '')\n    if request.user.is_authenticated:\n        booked_events = Booking.objects.filter(\n            user=request.user).values_list('event_id', flat=True)\n    if query:\n        events = events.filter(",
         "detail": "event_management.views",
         "documentation": {}
     },

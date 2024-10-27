@@ -22,7 +22,17 @@
     {% for event in events %}
       <div class="event-card">
         <h2>{{ event.name }}</h2>
-        <p>{{ event.description }}</p>
+        {% comment %} <p>{{ event.description }}</p> {% endcomment %}
+        <p>
+          <span class="description-preview">
+            {{ event.description|truncatewords:50 }}
+          </span>
+          <span class="description-full" style="display:none;">
+            {{ event.description }}
+          </span>
+          <a href="javascript:void(0);" onclick="toggleDescription(this)" class="toggle-btn">Show More</a>
+        </p>
+
         <p>Location: {{ event.location }}</p>
         <p>Date: {{ event.date }}</p>
         <p>Capacity: {{ event.capacity }}</p>
@@ -46,4 +56,22 @@
     <h4>No events added</h4>
   {% endif %}
 </div>
+
+
+<script>
+  function toggleDescription(button) {
+    const preview = button.previousElementSibling.previousElementSibling;
+    const fullText = button.previousElementSibling;
+    
+    if (fullText.style.display === "none") {
+      preview.style.display = "none";
+      fullText.style.display = "inline";
+      button.textContent = "Show Less";
+    } else {
+      preview.style.display = "inline";
+      fullText.style.display = "none";
+      button.textContent = "Show More";
+    }
+  }
+</script>
 {% endblock %}
