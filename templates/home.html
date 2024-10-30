@@ -5,7 +5,8 @@
 <link rel="stylesheet" href="{% static 'css/search.css' %}" />
 <h1>All Events</h1>
 <form method="get" action="{% url 'home' %}">
-  <input type="text" name="search" placeholder="Search by name, date, or location" value="{{ search_query }}">
+  <input type="text" name="search" placeholder="Search by name, date (e.g., 'Nov', '2024', '1'), or location" value="{{ search_query }}">
+
   <select name="category">
       <option value="">All Categories</option>
       <option value="conference" {% if selected_category == "conference" %}selected{% endif %}>Conference</option>

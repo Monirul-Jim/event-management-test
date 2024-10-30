@@ -314,6 +314,24 @@
         "documentation": {}
     },
     {
+        "label": "calendar",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "calendar",
+        "description": "calendar",
+        "detail": "calendar",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
         "label": "get_wsgi_application",
         "importPath": "django.core.wsgi",
         "description": "django.core.wsgi",
@@ -722,7 +740,7 @@
         "kind": 2,
         "importPath": "event_management.views",
         "description": "event_management.views",
-        "peekOfCode": "def home(request):\n    events = Event.objects.all()\n    booked_events = []\n    query = request.GET.get('search', '')\n    category = request.GET.get('category', '')\n    if request.user.is_authenticated:\n        booked_events = Booking.objects.filter(\n            user=request.user).values_list('event_id', flat=True)\n    if query:\n        events = events.filter(",
+        "peekOfCode": "def home(request):\n    events = Event.objects.all()\n    booked_events = []\n    query = request.GET.get('search', '').strip()\n    category = request.GET.get('category', '')\n    if request.user.is_authenticated:\n        booked_events = Booking.objects.filter(\n            user=request.user).values_list('event_id', flat=True)\n    if query:\n        filters = Q(name__icontains=query) | Q(location__icontains=query)",
         "detail": "event_management.views",
         "documentation": {}
     },
