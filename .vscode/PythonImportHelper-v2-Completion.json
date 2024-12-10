@@ -306,6 +306,15 @@
         "documentation": {}
     },
     {
+        "label": "dj_database_url",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "dj_database_url",
+        "description": "dj_database_url",
+        "detail": "dj_database_url",
+        "documentation": {}
+    },
+    {
         "label": "Q",
         "importPath": "django.db.models",
         "description": "django.db.models",
@@ -641,7 +650,7 @@
         "kind": 5,
         "importPath": "event_management.settings",
         "description": "event_management.settings",
-        "peekOfCode": "WSGI_APPLICATION = 'event_management.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/5.1/ref/settings/#databases\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n# Password validation",
+        "peekOfCode": "WSGI_APPLICATION = 'event_management.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/5.1/ref/settings/#databases\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\nDATABASES['default'] = dj_database_url.parse(",
         "detail": "event_management.settings",
         "documentation": {}
     },
@@ -650,7 +659,16 @@
         "kind": 5,
         "importPath": "event_management.settings",
         "description": "event_management.settings",
-        "peekOfCode": "DATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n# Password validation\n# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators\nAUTH_PASSWORD_VALIDATORS = [\n    {",
+        "peekOfCode": "DATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\nDATABASES['default'] = dj_database_url.parse(\n    'postgresql://elearning_project_user:M96geR5Esjt7Oz7GObs7QhmxozntDgO2@dpg-ctc37it6l47c73fnirb0-a.oregon-postgres.render.com/elearning_project')\n# postgresql://elearning_project_user:M96geR5Esjt7Oz7GObs7QhmxozntDgO2@dpg-ctc37it6l47c73fnirb0-a.oregon-postgres.render.com/elearning_project\n# Password validation",
+        "detail": "event_management.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DATABASES['default']",
+        "kind": 5,
+        "importPath": "event_management.settings",
+        "description": "event_management.settings",
+        "peekOfCode": "DATABASES['default'] = dj_database_url.parse(\n    'postgresql://elearning_project_user:M96geR5Esjt7Oz7GObs7QhmxozntDgO2@dpg-ctc37it6l47c73fnirb0-a.oregon-postgres.render.com/elearning_project')\n# postgresql://elearning_project_user:M96geR5Esjt7Oz7GObs7QhmxozntDgO2@dpg-ctc37it6l47c73fnirb0-a.oregon-postgres.render.com/elearning_project\n# Password validation\n# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators\nAUTH_PASSWORD_VALIDATORS = [\n    {\n        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',\n    },\n    {",
         "detail": "event_management.settings",
         "documentation": {}
     },
