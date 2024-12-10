@@ -74,15 +74,20 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(
+        'postgresql://elearning_project_user:M96geR5Esjt7Oz7GObs7QhmxozntDgO2@dpg-ctc37it6l47c73fnirb0-a.oregon-postgres.render.com/elearning_project',
+
+    )
 }
-DATABASES['default'] = dj_database_url.parse(
-    'postgresql://elearning_project_user:M96geR5Esjt7Oz7GObs7QhmxozntDgO2@dpg-ctc37it6l47c73fnirb0-a.oregon-postgres.render.com/elearning_project')
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+# DATABASES['default'] = dj_database_url.parse(
+#     'postgresql://elearning_project_user:M96geR5Esjt7Oz7GObs7QhmxozntDgO2@dpg-ctc37it6l47c73fnirb0-a.oregon-postgres.render.com/elearning_project')
 
 # postgresql://elearning_project_user:M96geR5Esjt7Oz7GObs7QhmxozntDgO2@dpg-ctc37it6l47c73fnirb0-a.oregon-postgres.render.com/elearning_project
 
